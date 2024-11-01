@@ -1,0 +1,26 @@
+name: Pelican site CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          pip install pelican markdown ghp-import
+      - name: Build the site
+        run: pelican content
+      - name: Deploy to GitHub Pages
+        run: |
+          ghp-import output -b gh-pages
+          git push origin gh-pages
